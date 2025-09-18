@@ -10,4 +10,15 @@ def info_inline():
     keyboard = InlineKeyboardMarkup(inline_keyboard=kb_list)
     return keyboard
 
+def info_inline_second():
+    kb_list = [
+        [InlineKeyboardButton(text='1', callback_data='feeldfdfing_bot'),
+         InlineKeyboardButton(text='2', callback_data='textfdf_send')],
+
+        [InlineKeyboardButton(text='3', url='https://github.com/tamirlan1919')]
+    ]
+    keyboard = InlineKeyboardMarkup(inline_keyboard=kb_list)
+    return keyboard
+
+
 
