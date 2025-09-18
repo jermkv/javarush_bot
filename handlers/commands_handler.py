@@ -2,15 +2,18 @@ from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
-from states import Person
+
+from services.dialog_gpt import dialog_gpt_func
+from states import Person, GPTDialog
+from services.random_fact import get_fact
+from keyboards.inline import start_keyboard
 
 router = Router()
 
 
 @router.message(Command('start'))
-async def start_handler(message: Message, state: FSMContext):
-    await message.answer('Привет а как тебя зовут?')
-    await state.set_state(Person.name)
+async def start_handler(message: Message):
+    await message.answer('Выбери что-то', reply_markup=start_keyboard())
 
 
 @router.message(Person.name)
@@ -44,9 +47,20 @@ async def info_handler(message: Message):
 
 
 
+@router.message(Command('random'))
+async def random_handler(message: Message):
+    await message.answer('Щас верну тебе рандомный факт')
+    fact = await get_fact()
+    await message.answer(f'Факт - {fact}')
 
-Commands/Photo/Voice
 
-Inline, Reply
+@router.message(Command('gpt'))
+async def random_handler(message: Message, state: FSMContext):
+    await message.answer('Что интересует? ')
+    await state.set_state(GPTDialog.message)
 
-Routers, FSM
+@router.message(GPTDialog.message)
+async def gpt_message_handler(message: Message, state: FSMContext):
+    await state.clear()
+    text = await dialog_gpt_func(message.text)
+    await message.answer(f'{text}')

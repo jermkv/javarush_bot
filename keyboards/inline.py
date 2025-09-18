@@ -21,4 +21,26 @@ def info_inline_second():
     return keyboard
 
 
+def start_keyboard():
+    kb_list = [
+        [InlineKeyboardButton(text='🎲 Интересный факт', callback_data='random_fact')],
+        [InlineKeyboardButton(text='🤖 ChatGPT', callback_data='chat_gpt')],
+        [InlineKeyboardButton(text='👥 Общение с личностью', callback_data='random_fact')],
+        [InlineKeyboardButton(text='🧠 Квиз', callback_data='qviz')],
+        [InlineKeyboardButton(text='🌏 Переводчик', callback_data='translate')],
+        [InlineKeyboardButton(text='🎥 Рекомендации', callback_data='recommendations')],
+
+    ]
+    keyboard = InlineKeyboardMarkup(inline_keyboard=kb_list)
+    return keyboard
+
+
+def fact_again_keyboard():
+    kb_list = [
+        [InlineKeyboardButton(text='🎯 Хочу еще факт', callback_data='random_fact')]
+    ]
+    keyboard = InlineKeyboardMarkup(inline_keyboard=kb_list)
+    return keyboard
+
+
 

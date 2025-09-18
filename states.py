@@ -6,3 +6,6 @@ class Person(StatesGroup):
     age = State()
     city = State()
 
+
+class GPTDialog(StatesGroup):
+    message = State()
