@@ -43,3 +43,10 @@ async def info_handler(message: Message):
     await message.answer('Можешь ознакомиться с панелью')
 
 
+
+
+Commands/Photo/Voice
+
+Inline, Reply
+
+Routers, FSM
