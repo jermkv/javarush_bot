@@ -9,3 +9,7 @@ class Person(StatesGroup):
 
 class GPTDialog(StatesGroup):
     message = State()
+
+
+class MessageTalks(StatesGroup):
+    message = State()

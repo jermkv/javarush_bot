@@ -6,7 +6,8 @@ from aiogram.fsm.context import FSMContext
 from services.dialog_gpt import dialog_gpt_func
 from states import Person, GPTDialog
 from services.random_fact import get_fact
-from keyboards.inline import start_keyboard
+from keyboards.inline import start_keyboard, get_persons_keyboard, topic_keyboard
+from storage import dialogues
 
 router = Router()
 
@@ -64,3 +65,21 @@ async def gpt_message_handler(message: Message, state: FSMContext):
     await state.clear()
     text = await dialog_gpt_func(message.text)
     await message.answer(f'{text}')
+
+
+@router.message(Command('talk'))
+async def talk_handler(message: Message):
+    await message.answer('С кем хочешь поговорить? ',reply_markup=get_persons_keyboard())
+
+
+@router.message(Command('quiz'))
+async def talk_handler(message: Message):
+    dialogues[message.from_user.id] = {
+        'topic': None,
+        'question': None,
+        'score': None,
+        'total': None
+    }
+    await message.answer('Выберите тему для квиза: ', reply_markup=topic_keyboard())
+
+

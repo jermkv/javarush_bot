@@ -1,4 +1,5 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from storage import PERSONS
 
 def info_inline():
     kb_list = [
@@ -43,4 +44,41 @@ def fact_again_keyboard():
     return keyboard
 
 
+def get_persons_keyboard():
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text=name, callback_data=f'persona:{name}')]
+            for name in PERSONS
+        ]
+    )
+    return kb
 
+
+def close_mode():
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text='Закончить', callback_data='close_mode')]
+        ]
+    )
+    return kb
+
+
+def topic_keyboard():
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text='История', callback_data='quiz:history')],
+            [InlineKeyboardButton(text='Наука', callback_data='quiz:science')],
+            [InlineKeyboardButton(text='IT', callback_data='quiz:it')],
+        ]
+    )
+    return kb
+
+def quiz_answers():
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text='Еще вопрос', callback_data='quiz:again')],
+            [InlineKeyboardButton(text='Сменить тему', callback_data='quiz:change')],
+            [InlineKeyboardButton(text='Закончить', callback_data='quiz:end')],
+        ]
+    )
+    return kb

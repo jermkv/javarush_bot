@@ -5,10 +5,9 @@ from handlers import router
 import logging
 
 
-#FSM - Машина состояний
 
 async def main():
-    logging.basicConfig(level=logging.INFO) #Логирование
+    logging.basicConfig(level=logging.INFO)
     bot = Bot(TOKEN)  # Связывались с серверами тг с нашим токеном
     dp = Dispatcher()  # Ловит апдейты
     dp.include_router(router)
