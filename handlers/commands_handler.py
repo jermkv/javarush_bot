@@ -66,7 +66,6 @@ async def gpt_message_handler(message: Message, state: FSMContext):
     text = await dialog_gpt_func(message.text)
     await message.answer(f'{text}')
 
-
 @router.message(Command('talk'))
 async def talk_handler(message: Message):
     await message.answer('С кем хочешь поговорить? ',reply_markup=get_persons_keyboard())

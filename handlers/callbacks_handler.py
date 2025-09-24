@@ -2,11 +2,11 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
-from keyboards.inline import fact_again_keyboard
+from keyboards.inline import fact_again_keyboard, get_persons_keyboard
 from services.quiz_service import get_quiz_question
 from services.random_fact import get_fact
 from storage import dialogues, PERSONS
-from states import MessageTalks
+from states import MessageTalks, QuizStates
 
 router = Router()
 
@@ -54,9 +54,50 @@ async def close_mode_handler(call: CallbackQuery, state: FSMContext):
 async def close_mode_handler(call: CallbackQuery, state: FSMContext):
     topic = call.data.split(':')[-1]
 
-    if topic in ['history', 'scince', 'it']:
-        dialogues[call.from_user.id]['topic'] = topic
+    # старт новой темы
+    if topic in ['история', 'наука', 'it']:
         question = await get_quiz_question(topic)
-        dialogues[call.from_user.id]['question'] = question
+
+
+        # сохраняем всё в dialogues
+        dialogues[call.from_user.id] = {
+            'topic': topic,
+            'question': question,
+            'score': None,
+            'total': None
+        }
+
         await call.message.answer(f'Тема: {topic}\n\n{question}')
-        await state.set_state()
+
+        # FSM используем только для состояния "идёт квиз"
+        await state.set_state(QuizStates.quiz_active)
+
+        print(dialogues)
+
+
+    # повторить квиз по той же теме
+    elif topic == 'again':
+        user_data = dialogues.get(call.from_user.id, {})
+        saved_topic = user_data.get('topic')
+
+        if not saved_topic:
+            await call.message.answer("❗ Тема не найдена, начни квиз заново.")
+            return
+
+        question = await get_quiz_question(saved_topic)
+        # сохраняем всё в dialogues
+        dialogues[call.from_user.id] = {
+            'topic': saved_topic,   # <-- исправлено
+            'question': question,
+            'score': None,
+            'total': None
+        }
+
+        await call.message.answer(f'Тема: {saved_topic}\n\n{question}')
+        await state.set_state(QuizStates.quiz_active)
+
+        print(dialogues)
+
+
+
+

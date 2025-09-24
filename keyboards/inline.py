@@ -26,7 +26,7 @@ def start_keyboard():
     kb_list = [
         [InlineKeyboardButton(text='🎲 Интересный факт', callback_data='random_fact')],
         [InlineKeyboardButton(text='🤖 ChatGPT', callback_data='chat_gpt')],
-        [InlineKeyboardButton(text='👥 Общение с личностью', callback_data='random_fact')],
+        [InlineKeyboardButton(text='👥 Общение с личностью', callback_data='/talk')],
         [InlineKeyboardButton(text='🧠 Квиз', callback_data='qviz')],
         [InlineKeyboardButton(text='🌏 Переводчик', callback_data='translate')],
         [InlineKeyboardButton(text='🎥 Рекомендации', callback_data='recommendations')],
@@ -66,8 +66,8 @@ def close_mode():
 def topic_keyboard():
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text='История', callback_data='quiz:history')],
-            [InlineKeyboardButton(text='Наука', callback_data='quiz:science')],
+            [InlineKeyboardButton(text='История', callback_data='quiz:история')],
+            [InlineKeyboardButton(text='Наука', callback_data='quiz:наука')],
             [InlineKeyboardButton(text='IT', callback_data='quiz:it')],
         ]
     )
