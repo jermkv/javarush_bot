@@ -13,3 +13,8 @@ class GPTDialog(StatesGroup):
 
 class MessageTalks(StatesGroup):
     message = State()
+
+
+class QuizStates(StatesGroup):
+    choosing_topic = State()
+    waiting_answer = State()

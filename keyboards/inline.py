@@ -66,9 +66,9 @@ def close_mode():
 def topic_keyboard():
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text='История', callback_data='quiz:history')],
-            [InlineKeyboardButton(text='Наука', callback_data='quiz:science')],
-            [InlineKeyboardButton(text='IT', callback_data='quiz:it')],
+            [InlineKeyboardButton(text='История', callback_data='topic:history')],
+            [InlineKeyboardButton(text='Наука', callback_data='topic:science')],
+            [InlineKeyboardButton(text='IT', callback_data='topic:it')],
         ]
     )
     return kb
@@ -76,9 +76,9 @@ def topic_keyboard():
 def quiz_answers():
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text='Еще вопрос', callback_data='quiz:again')],
-            [InlineKeyboardButton(text='Сменить тему', callback_data='quiz:change')],
-            [InlineKeyboardButton(text='Закончить', callback_data='quiz:end')],
+            [InlineKeyboardButton(text='Еще вопрос', callback_data='next_question')],
+            [InlineKeyboardButton(text='Сменить тему', callback_data='change_topic')],
+            [InlineKeyboardButton(text='Закончить', callback_data='end_quiz')],
         ]
     )
     return kb
