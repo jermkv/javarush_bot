@@ -82,3 +82,16 @@ def quiz_answers():
         ]
     )
     return kb
+
+def get_language_keyboard():
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text="🇬🇧 English", callback_data="lang_en"),
+            InlineKeyboardButton(text="🇫🇷 French", callback_data="lang_fr"),
+        ],
+        [
+            InlineKeyboardButton(text="🇩🇪 German", callback_data="lang_de"),
+            InlineKeyboardButton(text="🇪🇸 Spanish", callback_data="lang_es"),
+        ]
+    ])
+    return kb

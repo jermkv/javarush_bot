@@ -1,6 +1,5 @@
 from aiogram.fsm.state import State, StatesGroup
 
-
 class Person(StatesGroup):
     name = State()
     age = State()
@@ -18,3 +17,7 @@ class MessageTalks(StatesGroup):
 class QuizStates(StatesGroup):
     choosing_topic = State()
     waiting_answer = State()
+
+class TranslationStates(StatesGroup):
+    choosing_language = State()
+    waiting_text = State()

@@ -1,11 +1,12 @@
 from aiogram import Router
-from aiogram.types import Message
+from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from services.role_mode import ask_role_gpt
 
 from keyboards.inline import close_mode, quiz_answers, topic_keyboard
-from states import Person, GPTDialog, MessageTalks, QuizStates
+from services.translator import translate_text
+from states import Person, GPTDialog, MessageTalks, QuizStates, TranslationStates
 from storage import dialogues
 from services.quiz_service import check_answer
 from .quiz_manager import increase_score, get_score
@@ -34,3 +35,15 @@ async def waiting_answer_handler(message: Message, state: FSMContext):
         await message.answer(f'⛔️ Неправильно твой счет {score}', reply_markup=quiz_answers())
 
 
+@router.message(TranslationStates.waiting_text)
+async def handle_translation_text(message: Message, state: FSMContext):
+    data = await state.get_data()
+    target_lang = data.get("target_lang", "en")
+    text_to_translate = message.text
+
+    translated = await translate_text(text_to_translate, target_lang)
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="Сменить язык", callback_data="change_lang")],
+        [InlineKeyboardButton(text="Закончить", callback_data="/start")]
+    ])
+    await message.answer(f"Перевод:\n{translated}", reply_markup=kb)

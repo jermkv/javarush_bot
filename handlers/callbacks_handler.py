@@ -1,14 +1,14 @@
-from aiogram import F, Router
+from aiogram import F, Router, types
+from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
 from handlers.quiz_manager import get_score
-from keyboards.inline import fact_again_keyboard, topic_keyboard
+from keyboards.inline import fact_again_keyboard, topic_keyboard, start_keyboard, get_language_keyboard
 from services.quiz_service import get_quiz_question
 from services.random_fact import get_fact
 from storage import dialogues, PERSONS
-from states import MessageTalks, QuizStates
-
+from states import MessageTalks, QuizStates, TranslationStates
 
 router = Router()
 
@@ -83,3 +83,39 @@ async def next_quiz_qestion_handler(call: CallbackQuery, state: FSMContext):
     score = await get_score(state)
     await state.clear()
     await call.message.answer(f'🎬 Квиз завершен! Твйо итоговый счет: {score}')
+
+@router.callback_query(F.data == "/start")
+async def start_callback_handler(call: CallbackQuery, state: FSMContext):
+    await state.clear()
+    await call.message.answer('Выбери что-то', reply_markup=start_keyboard())
+    await call.answer()
+
+# ===== хендлеры для переводчика =====
+
+@router.callback_query(F.data == "translate")
+async def start_translation(call: types.CallbackQuery, state: FSMContext):
+    await state.set_state(TranslationStates.choosing_language)
+    await call.message.answer(
+        "Выберите язык для перевода:",
+        reply_markup=get_language_keyboard()
+    )
+    await call.answer()
+
+
+@router.callback_query(F.data.startswith("lang_"), TranslationStates.choosing_language)
+async def language_chosen(call: types.CallbackQuery, state: FSMContext):
+    lang_code = call.data.split("_")[1]
+    await state.update_data(target_lang=lang_code)
+    await state.set_state(TranslationStates.waiting_text)
+    await call.message.answer("Отправьте текст, который нужно перевести.")
+    await call.answer()
+
+
+@router.callback_query(F.data == "change_lang", TranslationStates.waiting_text)
+async def change_language(call: types.CallbackQuery, state: FSMContext):
+    await state.set_state(TranslationStates.choosing_language)
+    await call.message.answer(
+        "Выберите язык для перевода:",
+        reply_markup=get_language_keyboard()
+    )
+    await call.answer()
