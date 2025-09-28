@@ -26,7 +26,7 @@ def start_keyboard():
     kb_list = [
         [InlineKeyboardButton(text='🎲 Интересный факт', callback_data='random_fact')],
         [InlineKeyboardButton(text='🤖 ChatGPT', callback_data='chat_gpt')],
-        [InlineKeyboardButton(text='👥 Общение с личностью', callback_data='/talk')],
+        [InlineKeyboardButton(text='👥 Общение с личностью', callback_data='random_fact')],
         [InlineKeyboardButton(text='🧠 Квиз', callback_data='qviz')],
         [InlineKeyboardButton(text='🌏 Переводчик', callback_data='translate')],
         [InlineKeyboardButton(text='🎥 Рекомендации', callback_data='recommendations')],
@@ -66,9 +66,9 @@ def close_mode():
 def topic_keyboard():
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text='История', callback_data='quiz:история')],
-            [InlineKeyboardButton(text='Наука', callback_data='quiz:наука')],
-            [InlineKeyboardButton(text='IT', callback_data='quiz:it')],
+            [InlineKeyboardButton(text='История', callback_data='topic:history')],
+            [InlineKeyboardButton(text='Наука', callback_data='topic:science')],
+            [InlineKeyboardButton(text='IT', callback_data='topic:it')],
         ]
     )
     return kb
@@ -76,9 +76,9 @@ def topic_keyboard():
 def quiz_answers():
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text='Еще вопрос', callback_data='quiz:again')],
-            [InlineKeyboardButton(text='Сменить тему', callback_data='quiz:change')],
-            [InlineKeyboardButton(text='Закончить', callback_data='quiz:end')],
+            [InlineKeyboardButton(text='Еще вопрос', callback_data='next_question')],
+            [InlineKeyboardButton(text='Сменить тему', callback_data='change_topic')],
+            [InlineKeyboardButton(text='Закончить', callback_data='end_quiz')],
         ]
     )
     return kb

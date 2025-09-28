@@ -14,6 +14,7 @@ class GPTDialog(StatesGroup):
 class MessageTalks(StatesGroup):
     message = State()
 
+
 class QuizStates(StatesGroup):
-    quiz_active = State()
-    topic = State()
+    choosing_topic = State()
+    waiting_answer = State()

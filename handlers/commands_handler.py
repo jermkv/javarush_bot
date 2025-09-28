@@ -73,12 +73,6 @@ async def talk_handler(message: Message):
 
 @router.message(Command('quiz'))
 async def talk_handler(message: Message):
-    dialogues[message.from_user.id] = {
-        'topic': None,
-        'question': None,
-        'score': None,
-        'total': None
-    }
     await message.answer('Выберите тему для квиза: ', reply_markup=topic_keyboard())
 
 

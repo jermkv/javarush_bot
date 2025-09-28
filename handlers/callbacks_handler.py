@@ -2,11 +2,13 @@ from aiogram import F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
-from keyboards.inline import fact_again_keyboard, get_persons_keyboard
+from handlers.quiz_manager import get_score
+from keyboards.inline import fact_again_keyboard, topic_keyboard
 from services.quiz_service import get_quiz_question
 from services.random_fact import get_fact
 from storage import dialogues, PERSONS
 from states import MessageTalks, QuizStates
+
 
 router = Router()
 
@@ -50,54 +52,34 @@ async def close_mode_handler(call: CallbackQuery, state: FSMContext):
     await state.clear()
 
 
-@router.callback_query(F.data.startswith('quiz:'))
+@router.callback_query(F.data.startswith('topic:'))
 async def close_mode_handler(call: CallbackQuery, state: FSMContext):
+    await call.answer('Сейчас задам вопрос', show_alert=True)
     topic = call.data.split(':')[-1]
-
-    # старт новой темы
-    if topic in ['история', 'наука', 'it']:
-        question = await get_quiz_question(topic)
-
-
-        # сохраняем всё в dialogues
-        dialogues[call.from_user.id] = {
-            'topic': topic,
-            'question': question,
-            'score': None,
-            'total': None
-        }
-
-        await call.message.answer(f'Тема: {topic}\n\n{question}')
-
-        # FSM используем только для состояния "идёт квиз"
-        await state.set_state(QuizStates.quiz_active)
-
-        print(dialogues)
+    question = await get_quiz_question(topic)
+    await state.update_data(question=question)
+    await state.update_data(topic=topic)
+    await state.set_state(QuizStates.waiting_answer)
+    await call.message.answer(f'Тема: {topic}\n\n{question}\nМожешь ответить на вопрос.')
 
 
-    # повторить квиз по той же теме
-    elif topic == 'again':
-        user_data = dialogues.get(call.from_user.id, {})
-        saved_topic = user_data.get('topic')
-
-        if not saved_topic:
-            await call.message.answer("❗ Тема не найдена, начни квиз заново.")
-            return
-
-        question = await get_quiz_question(saved_topic)
-        # сохраняем всё в dialogues
-        dialogues[call.from_user.id] = {
-            'topic': saved_topic,   # <-- исправлено
-            'question': question,
-            'score': None,
-            'total': None
-        }
-
-        await call.message.answer(f'Тема: {saved_topic}\n\n{question}')
-        await state.set_state(QuizStates.quiz_active)
-
-        print(dialogues)
+@router.callback_query(F.data == 'next_question')
+async def next_quiz_qestion_handler(call: CallbackQuery, state: FSMContext):
+    await call.answer('Сейчас задам вопрос', show_alert=True)
+    data = await state.get_data()
+    topic = data.get('topic')
+    question = await get_quiz_question(topic)
+    await call.message.answer(f'Продолжаем по теме: {topic}\n\n{question}')
+    await state.set_state(QuizStates.waiting_answer)
 
 
+@router.callback_query(F.data == 'change_topic')
+async def next_quiz_question_handler(call: CallbackQuery):
+    await call.message.answer('Выбери новую тему', reply_markup=topic_keyboard())
 
 
+@router.callback_query(F.data == 'end_quiz')
+async def next_quiz_qestion_handler(call: CallbackQuery, state: FSMContext):
+    score = await get_score(state)
+    await state.clear()
+    await call.message.answer(f'🎬 Квиз завершен! Твйо итоговый счет: {score}')
