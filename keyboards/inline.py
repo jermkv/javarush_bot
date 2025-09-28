@@ -95,3 +95,25 @@ def get_language_keyboard():
         ]
     ])
     return kb
+
+def get_recommend_type_keyboard():
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [
+            InlineKeyboardButton(text="🎬 Фильмы", callback_data="type_movies"),
+        ],
+        [
+            InlineKeyboardButton(text="📚 Книги", callback_data="type_books"),
+        ],
+        [
+            InlineKeyboardButton(text="🎵 Музыка", callback_data="type_music"),
+        ],
+    ])
+    return kb
+
+def get_recommendation_action_keyboard():
+    kb = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="Не нравится", callback_data="not_like")],
+        [InlineKeyboardButton(text="Закончить", callback_data="/start")]
+    ])
+    return kb
+

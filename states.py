@@ -21,3 +21,8 @@ class QuizStates(StatesGroup):
 class TranslationStates(StatesGroup):
     choosing_language = State()
     waiting_text = State()
+
+class RecommendationStates(StatesGroup):
+    choosing_type = State()
+    choosing_genre = State()
+    showing_recommendation = State()
