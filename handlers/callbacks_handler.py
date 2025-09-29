@@ -43,6 +43,14 @@ async def talk_handler(call: CallbackQuery, state: FSMContext):
     await state.set_state(MessageTalks.message)
     await call.message.answer('С кем хочешь поговорить? ',reply_markup=get_persons_keyboard())
 
+@router.callback_query(F.data == "qviz")
+async def quiz_callback(call: CallbackQuery):
+    await call.message.answer(
+        "Выберите тему для квиза:",
+        reply_markup=topic_keyboard()
+    )
+    await call.answer()
+
 @router.callback_query(F.data.startswith('persona:'))
 async def persona_handler(call: CallbackQuery, state: FSMContext):
     persona = call.data.split(':')[-1]
