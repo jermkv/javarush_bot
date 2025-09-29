@@ -4,7 +4,7 @@ from aiogram.types import CallbackQuery
 
 from handlers.quiz_manager import get_score
 from keyboards.inline import fact_again_keyboard, topic_keyboard, start_keyboard, get_language_keyboard, \
-    get_recommend_type_keyboard, get_recommendation_action_keyboard, get_persons_keyboard
+    get_recommend_type_keyboard, get_recommendation_action_keyboard, get_persons_keyboard, get_back_keyboard
 from services.quiz_service import get_quiz_question
 from services.random_fact import get_fact
 from services.recomendations import get_recommendations
@@ -100,7 +100,7 @@ async def next_quiz_question_handler(call: CallbackQuery):
 async def next_quiz_qestion_handler(call: CallbackQuery, state: FSMContext):
     score = await get_score(state)
     await state.clear()
-    await call.message.answer(f'🎬 Квиз завершен! Твйо итоговый счет: {score}')
+    await call.message.answer(f'🎬 Квиз завершен! Твйо итоговый счет: {score}', reply_markup=get_back_keyboard())
 
 @router.callback_query(F.data == "/start")
 async def start_callback_handler(call: CallbackQuery, state: FSMContext):
