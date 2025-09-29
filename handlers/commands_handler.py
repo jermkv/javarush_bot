@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from services.dialog_gpt import dialog_gpt_func
 from states import Person, GPTDialog
 from services.random_fact import get_fact
-from keyboards.inline import start_keyboard, get_persons_keyboard, topic_keyboard
+from keyboards.inline import start_keyboard, get_persons_keyboard, topic_keyboard, get_back_keyboard
 from storage import dialogues
 
 router = Router()
@@ -61,10 +61,9 @@ async def random_handler(message: Message, state: FSMContext):
     await state.set_state(GPTDialog.message)
 
 @router.message(GPTDialog.message)
-async def gpt_message_handler(message: Message, state: FSMContext):
-    await state.clear()
-    text = await dialog_gpt_func(message.text)
-    await message.answer(f'{text}')
+async def gpt_reply(message: Message):
+    reply = await dialog_gpt_func(message.text)
+    await message.answer(reply, reply_markup=get_back_keyboard())
 
 @router.message(Command('talk'))
 async def talk_handler(message: Message):

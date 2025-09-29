@@ -4,12 +4,12 @@ from aiogram.types import CallbackQuery
 
 from handlers.quiz_manager import get_score
 from keyboards.inline import fact_again_keyboard, topic_keyboard, start_keyboard, get_language_keyboard, \
-    get_recommend_type_keyboard, get_recommendation_action_keyboard
+    get_recommend_type_keyboard, get_recommendation_action_keyboard, get_persons_keyboard
 from services.quiz_service import get_quiz_question
 from services.random_fact import get_fact
 from services.recomendations import get_recommendations
 from storage import dialogues, PERSONS
-from states import MessageTalks, QuizStates, TranslationStates, RecommendationStates
+from states import MessageTalks, QuizStates, TranslationStates, RecommendationStates, GPTDialog
 
 router = Router()
 
@@ -32,7 +32,16 @@ async def random_handler(call: CallbackQuery):
     fact = await get_fact()
     await call.message.answer(f'{fact}', reply_markup=fact_again_keyboard())
 
+@router.callback_query(F.data == "chat_gpt")
+async def gpt_callback(call: CallbackQuery, state: FSMContext):
+    await state.set_state(GPTDialog.message)
+    await call.message.answer("Что интересует?")
+    await call.answer()
 
+@router.callback_query(F.data == 'talk')
+async def talk_handler(call: CallbackQuery, state: FSMContext):
+    await state.set_state(MessageTalks.message)
+    await call.message.answer('С кем хочешь поговорить? ',reply_markup=get_persons_keyboard())
 
 @router.callback_query(F.data.startswith('persona:'))
 async def persona_handler(call: CallbackQuery, state: FSMContext):

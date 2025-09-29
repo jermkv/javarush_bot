@@ -26,7 +26,7 @@ def start_keyboard():
     kb_list = [
         [InlineKeyboardButton(text='🎲 Интересный факт', callback_data='random_fact')],
         [InlineKeyboardButton(text='🤖 ChatGPT', callback_data='chat_gpt')],
-        [InlineKeyboardButton(text='👥 Общение с личностью', callback_data='random_fact')],
+        [InlineKeyboardButton(text='👥 Общение с личностью', callback_data='talk')],
         [InlineKeyboardButton(text='🧠 Квиз', callback_data='qviz')],
         [InlineKeyboardButton(text='🌏 Переводчик', callback_data='translate')],
         [InlineKeyboardButton(text='🎥 Рекомендации', callback_data='recommendations')],
@@ -38,7 +38,7 @@ def start_keyboard():
 
 def fact_again_keyboard():
     kb_list = [
-        [InlineKeyboardButton(text='🎯 Хочу еще факт', callback_data='random_fact')]
+        [InlineKeyboardButton(text='Закончить', callback_data='/start'), InlineKeyboardButton(text='🎯 Хочу еще факт', callback_data='random_fact')]
     ]
     keyboard = InlineKeyboardMarkup(inline_keyboard=kb_list)
     return keyboard
@@ -57,7 +57,7 @@ def get_persons_keyboard():
 def close_mode():
     kb = InlineKeyboardMarkup(
         inline_keyboard=[
-            [InlineKeyboardButton(text='Закончить', callback_data='close_mode')]
+            [InlineKeyboardButton(text='Закончить', callback_data='/start')]
         ]
     )
     return kb
@@ -117,3 +117,11 @@ def get_recommendation_action_keyboard():
     ])
     return kb
 
+# Create "Назад" button
+def get_back_keyboard():
+    kb = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="🔙 Назад", callback_data="/start")]
+        ]
+    )
+    return kb
